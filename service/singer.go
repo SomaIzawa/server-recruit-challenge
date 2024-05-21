@@ -15,17 +15,17 @@ type SingerService interface {
 }
 
 type singerService struct {
-	singerRepository repository.SingerRepository
+	singerRepository repository.ISingerRepository
 }
 
 var _ SingerService = (*singerService)(nil)
 
-func NewSingerService(singerRepository repository.SingerRepository) *singerService {
+func NewSingerService(singerRepository repository.ISingerRepository) *singerService {
 	return &singerService{singerRepository: singerRepository}
 }
 
 func (s *singerService) GetSingerListService(ctx context.Context) ([]*model.Singer, error) {
-	singers, err := s.singerRepository.GetAll(ctx)
+	singers, err := s.singerRepository.GetAll()
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func (s *singerService) GetSingerListService(ctx context.Context) ([]*model.Sing
 }
 
 func (s *singerService) GetSingerService(ctx context.Context, singerID model.SingerID) (*model.Singer, error) {
-	singer, err := s.singerRepository.Get(ctx, singerID)
+	singer, err := s.singerRepository.Get(singerID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,14 +41,14 @@ func (s *singerService) GetSingerService(ctx context.Context, singerID model.Sin
 }
 
 func (s *singerService) PostSingerService(ctx context.Context, singer *model.Singer) error {
-	if err := s.singerRepository.Add(ctx, singer); err != nil {
+	if err := s.singerRepository.Add(singer); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (s *singerService) DeleteSingerService(ctx context.Context, singerID model.SingerID) error {
-	if err := s.singerRepository.Delete(ctx, singerID); err != nil {
+	if err := s.singerRepository.Delete(singerID); err != nil {
 		return err
 	}
 	return nil

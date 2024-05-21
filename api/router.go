@@ -6,12 +6,13 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/pulse227/server-recruit-challenge-sample/api/middleware"
 	"github.com/pulse227/server-recruit-challenge-sample/controller"
-	"github.com/pulse227/server-recruit-challenge-sample/infra/memorydb"
+	"github.com/pulse227/server-recruit-challenge-sample/repository"
 	"github.com/pulse227/server-recruit-challenge-sample/service"
+	"gorm.io/gorm"
 )
 
-func NewRouter() *mux.Router {
-	singerRepo := memorydb.NewSingerRepository()
+func NewRouter(dbConn *gorm.DB) *mux.Router {
+	singerRepo := repository.NewSingerRepisitory(*dbConn)
 	singerService := service.NewSingerService(singerRepo)
 	singerController := controller.NewSingerController(singerService)
 

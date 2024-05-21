@@ -9,13 +9,16 @@ import (
 	"time"
 
 	"github.com/pulse227/server-recruit-challenge-sample/api"
+	"github.com/pulse227/server-recruit-challenge-sample/db"
 )
 
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	dbConn := db.NewDB()
 	defer stop()
+	defer db.CloseDB(dbConn)
 
-	r := api.NewRouter()
+	r := api.NewRouter(dbConn)
 
 	server := &http.Server{
 		Addr:    ":8888",
